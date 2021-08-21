@@ -13,6 +13,7 @@ public class Main {
                 "  * the first parameter represents a starting number;\n" +
                 "  * the second parameters show how many consecutive numbers are to be processed;\n" +
                 " - two natural numbers and a property to search for;\n"+
+                "- two natural numbers and two properties to search for" +
                 "- separate the parameters with one space;\n" +
                 "- enter 0 to exit.\n");
 
@@ -32,9 +33,6 @@ public class Main {
                     System.out.println("The first parameter should be a natural number or zero.");
                     continue;
                 }
-                if (loopNum < 0) {
-                    System.out.println("The second parameter should be a natural number.");
-                }
                 if (input == 0) {
                     System.out.println("Goodbye!");
                     program = false;
@@ -44,6 +42,9 @@ public class Main {
                 if (stringInput.length == 2) {
                     loopNum = Long.parseLong(stringInput[1]);
                     System.out.println("");
+                    if (loopNum < 0) {
+                        System.out.println("The second parameter should be a natural number.");
+                    }
                     for (int i = 0; i < loopNum; i++) {
                         System.out.println(input + i + " is " + determineProperties(input + i));
                     }
@@ -52,7 +53,7 @@ public class Main {
 
                 if (stringInput.length == 3) {
                     loopNum = Long.parseLong(stringInput[1]);
-                    firstProperty = (stringInput[2]);
+                    firstProperty = (stringInput[2].toUpperCase());
                     boolean includesProperty = false;
 
                     //test selection
@@ -67,6 +68,7 @@ public class Main {
                         displayPropertyInputErrors(includesProperty, firstProperty);
                         continue;
                     }
+
                     switch (firstProperty) {
                         case "EVEN":
                             for (int i = 0; i < loopNum; i++) {
@@ -164,19 +166,14 @@ public class Main {
 
                 if (stringInput.length == 4) {
                     loopNum = Long.parseLong(stringInput[1]);
-                    firstProperty = stringInput[2];
-                    secondProperty = stringInput[3];
+                    firstProperty = stringInput[2].toUpperCase();
+                    secondProperty = stringInput[3].toUpperCase();
                     boolean includesFirstProperty = false;
                     boolean includesSecondProperty = false;
 
 
-
                     //EVEN/ODD, DUCK/SPY, SUNNY/SQUARE verification
 
-                    //ODD/SPY, ODD/DUCK, ODD/SUNNY, ODD/SQUARE
-                    //EVEN/DUCK, EVEN/SPY, EVEN/SUNNY, EVEN/SQUARE
-                    //DUCK/SUNNY, DUCK/SQUARE
-                    //SPY/SUNNY, SPY/SQUARE
 
                     //test selection
                     List<String> properties = Arrays.asList("DUCK", "EVEN", "ODD", "GAPFUL", "SPY", "PALINDROMIC", "BUZZ", "SQUARE", "SUNNY");
@@ -190,9 +187,581 @@ public class Main {
                     }
 
                     displayPropertyInputErrors(includesFirstProperty, includesSecondProperty, firstProperty, secondProperty);
+
                     detectAndDisplayMutuallyExclusiveProperties(firstProperty, secondProperty);
 
+                    //ODD/SPY, ODD/DUCK, ODD/SUNNY, ODD/SQUARE, ODD/BUZZ
+                    //EVEN/DUCK, EVEN/SPY, EVEN/SUNNY, EVEN/SQUARE, EVEN/BUZZ
+                    //DUCK/SUNNY, DUCK/SQUARE, DUCK/BUZZ
+                    //SPY/SUNNY, SPY/SQUARE, SPY/BUZZ
+                    //SQUARE/EVEN, SQUARE/ODD, SQUARE/DUCK, SQUARE/SPY, SQUARE/PALINDROMIC, SQUARE/BUZZ
+                    //SUNNY/EVEN, SUNNY/ODD, SUNNY/DUCK, SUNNY/SPY, SUNNY/PALINDROMIC, SUNNY/BUZZ
+                    //BUZZ/EVEN, BUZZ/ODD, BUZZ/DUCK, BUZZ/SPY, BUZZ/SQUARE, BUZZ/SUNNY
+                    //GAPFUL/EVEN, GAPFUL/ODD, GAPFULL/DUCK, GAPFUL/SPY, GAPFUL/SQUARE, GAPFUL/SUNNY, GAPFUL/BUZZ
+                    if (firstProperty.equals("GAP") && secondProperty.equals("EVEN")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isGapFul(input + i) == true && isEven(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("GAP") && secondProperty.equals("ODD")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isGapFul(input + i) == true && isOdd(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("GAP") && secondProperty.equals("DUCK")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isGapFul(input + i) == true && isEven(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("GAP") && secondProperty.equals("SPY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isGapFul(input + i) == true && isSpy(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("GAP") && secondProperty.equals("SQUARE")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isGapFul(input + i) == true && isSquare(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("GAP") && secondProperty.equals("SUNNY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isGapFul(input + i) == true && isSquare(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("GAP") && secondProperty.equals("BUZZ")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isGapFul(input + i) == true && isBuzz(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+
+                    if (firstProperty.equals("ODD") && secondProperty.equals("SPY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isOdd(input + i) == true && isSpy(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("ODD") && secondProperty.equals("BUZZ")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isOdd(input + i) == true && isBuzz(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("ODD") && secondProperty.equals("PALINDROMIC")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isOdd(input + i) == true && isPalindrome(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("ODD") && secondProperty.equals("DUCK")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isOdd(input + i) == true && isDuck(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("ODD") && secondProperty.equals("SUNNY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isOdd(input + i) == true && isSquare(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("ODD") && secondProperty.equals("SQUARE")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isOdd(input + i) == true && isSquare(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("EVEN") && secondProperty.equals("DUCK")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isEven(input + i) == true && isDuck(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("EVEN") && secondProperty.equals("BUZZ")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isEven(input + i) == true && isDuck(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("EVEN") && secondProperty.equals("PALINDROMIC")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isEven(input + i) == true && isPalindrome(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("EVEN") && secondProperty.equals("SPY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isEven(input + i) == true && isSpy(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("EVEN") && secondProperty.equals("SUNNY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isEven(input + i) == true && isSquare(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("EVEN") && secondProperty.equals("SQUARE")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isEven(input + i) == true && isSquare(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("DUCK") && secondProperty.equals("SUNNY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isDuck(input + i) == true && isSquare(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("DUCK") && secondProperty.equals("BUZZ")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isDuck(input + i) == true && isBuzz(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("DUCK") && secondProperty.equals("PALINDROMIC")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isDuck(input + i) == true && isPalindrome(input + i + 1) == true) {
+                                System.out.println((input + i + 1) + " is" + determineProperties(input + i + 1));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("DUCK") && secondProperty.equals("SQUARE")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isDuck(input + i) == true && isSquare(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SPY") && secondProperty.equals("SUNNY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSpy(input + i) == true && isSquare(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SPY") && secondProperty.equals("BUZZ")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSpy(input + i) == true && isBuzz(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SPY") && secondProperty.equals("PALINDROMIC")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSpy(input + i) == true && isPalindrome(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SPY") && secondProperty.equals("SQUARE")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSpy(input + i) == true && isSquare(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+
+                    if (firstProperty.equals("PALINDROMIC") && secondProperty.equals("EVEN")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isPalindrome(input + i) == true && isEven(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("PALINDROMIC") && secondProperty.equals("BUZZ")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isPalindrome(input + i) == true && isBuzz(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("PALINDROMIC") && secondProperty.equals("ODD")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isPalindrome(input + i) == true && isOdd(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("PALINDROMIC") && secondProperty.equals("SQUARE")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isPalindrome(input + i) == true && isSquare(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("PALINDROMIC") && secondProperty.equals("SUNNY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isPalindrome(input + i) == true && isSquare(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("PALINDROMIC") && secondProperty.equals("DUCK")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isPalindrome(input + i) == true && isDuck(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("PALINDROMIC") && secondProperty.equals("GAPFUL")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isPalindrome(input + i) == true && isGapFul(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("PALINDROMIC") && secondProperty.equals("SPY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isPalindrome(input + i) == true && isSpy(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SQUARE") && secondProperty.equals("EVEN")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i) == true && isEven(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SQUARE") && secondProperty.equals("BUZZ")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i) == true && isBuzz(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SQUARE") && secondProperty.equals("ODD")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i) == true && isOdd(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SQUARE") && secondProperty.equals("DUCK")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i) == true && isDuck(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SQUARE") && secondProperty.equals("GAPFUL")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i) == true && isGapFul(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SQUARE") && secondProperty.equals("SPY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i) == true && isSpy(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SUNNY") && secondProperty.equals("SPY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i + 1) == true && isSpy(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SUNNY") && secondProperty.equals("SPY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i + 1) == true && isBuzz(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SUNNY") && secondProperty.equals("EVEN")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i + 1) == true && isEven(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SUNNY") && secondProperty.equals("ODD")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i + 1) == true && isOdd(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SUNNY") && secondProperty.equals("GAPFUL")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i + 1) == true && isGapFul(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SUNNY") && secondProperty.equals("DUCK")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i + 1) == true && isDuck(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("SUNNY") && secondProperty.equals("PALINDROMIC")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isSquare(input + i + 1) == true && isPalindrome(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("BUZZ") && secondProperty.equals("EVEN")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isBuzz(input + i) == true && isEven(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("BUZZ") && secondProperty.equals("ODD")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isBuzz(input + i) == true && isOdd(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("BUZZ") && secondProperty.equals("PALINDROMIC")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isBuzz(input + i) == true && isPalindrome(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("BUZZ") && secondProperty.equals("GAPFUL")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isBuzz(input + i) == true && isGapFul(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("BUZZ") && secondProperty.equals("DUCK")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isBuzz(input + i) == true && isDuck(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("BUZZ") && secondProperty.equals("SPY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isBuzz(input + i) == true && isSpy(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("BUZZ") && secondProperty.equals("SQUARE")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isBuzz(input + i) == true && isSquare(input + i) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
+                    if (firstProperty.equals("BUZZ") && secondProperty.equals("SUNNY")) {
+                        for (int i = 0; i < loopNum; i++) {
+                            if (isBuzz(input + i) == true && isSquare(input + i + 1) == true) {
+                                System.out.println((input + i) + " is" + determineProperties(input + i));
+                            } else {
+                                i--;
+                                input++;
+                            }
+                        }
+                    }
                 }
+                System.out.println("");
 
                 if (loopNum == 0) {
                     System.out.println("\nProperties of " + input);
@@ -263,10 +832,9 @@ public class Main {
 
     public static boolean isSquare(long x) {
         boolean result = false;
-        for (int i = 1; i <= x ; i++) {
-            if (i * i == x) {
-                result = true;
-            }
+        long square = (long)Math.sqrt(x);
+        if (square * square == x) {
+            result = true;
         }
         return result;
     }
@@ -364,9 +932,6 @@ public class Main {
         }
         return palindrome;
     }
-
-
-
 }
 
 
