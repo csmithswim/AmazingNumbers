@@ -11,9 +11,9 @@ public class Main {
         System.out.println("Supported requests: \n-enter a natural number to know its properties;");
         System.out.println("- enter two natural numbers to obtain the properties of the list:\n" +
                 "  * the first parameter represents a starting number;\n" +
-                "  * the second parameters show how many consecutive numbers are to be processed;\n" +
+                "  * the second parameters show how many consecutive numbers are to be printed;\n" +
                 " - two natural numbers and a property to search for;\n"+
-                "- two natural numbers and two properties to search for" +
+                "- two natural numbers and two properties to search for;" +
                 "- separate the parameters with one space;\n" +
                 "- enter 0 to exit.\n");
 
@@ -77,104 +77,41 @@ public class Main {
                     displayPropertyInputErrors(incorrectProperties.toString().split(" "));
                     continue;
                     }
+                    if (detectAndDisplayMutuallyExclusiveProperties(userInputProperties) == false) {
+                        continue;
+                    }
 
+                    int propertyLength = userInputProperties.length;
 
-//                    for (String e : properties) {
-//                        if (firstProperty.equals(e)) {
-//                            includesProperty = true;
-//                            break;
-//                        }
-//                    }
-//                    if (includesProperty == false) {
-//                        displayPropertyInputErrors(includesProperty, firstProperty);
-//                        continue;
-//                    }
-//
-                    int countHasProperty = 0;
+                    int counter = 0;
                     for (int i = 0; i < loopNum; i++) {
+                        int containsUserProperty = 0;
+
                         String[] arrayToTest = determineProperties(amazingNumber + i).split(", ");
-                        for (int j = 0; j < arrayToTest.length; j++) {
-                            if (userInputProperties[0].equalsIgnoreCase(arrayToTest[j])) {
-                                countHasProperty++;
+                        for (int j = 0; j < propertyLength; j++) {
+                            for (int k = 0; k < arrayToTest.length; k++) {
+                                if (userInputProperties[j].equalsIgnoreCase(arrayToTest[k])) {
+                                    containsUserProperty++;
+                                    break;
+                                }
+                            }
+
+                            if (containsUserProperty == propertyLength) {
                                 System.out.println((amazingNumber + i) + " is " + determineProperties(amazingNumber + i));
-                                break;
+                                counter++;
+                                continue;
                             }
                         }
-                        if (countHasProperty == loopNum) {
+                        if (counter == loopNum) {
                             break;
                         }
-                        if (countHasProperty < loopNum) {
+                        if (counter < loopNum) {
                             i--;
                             amazingNumber++;
                         }
-                    }
-                    System.out.println("");
+                }
+                System.out.println("");
 
-
-//                }
-//
-//                if (stringInput.length == 4) {
-//                    loopNum = Long.parseLong(stringInput[1]);
-//                    firstProperty = stringInput[2];
-//                    secondProperty = stringInput[3];
-//
-//                    boolean includesFirstProperty = false;
-//                    boolean includesSecondProperty = false;
-//                    loopNum = Long.parseLong(stringInput[1]);
-//
-//                    firstProperty = stringInput[2];
-//                    secondProperty = stringInput[3];
-//
-//                    List<String> properties = Arrays.asList("DUCK", "EVEN", "ODD", "GAPFUL", "SPY", "PALINDROMIC", "BUZZ", "SQUARE", "SUNNY", "JUMPING");
-//                    for (String e : properties) {
-//                        if (firstProperty.equalsIgnoreCase(e)) {
-//                            includesFirstProperty = true;
-//                        }
-//                        if (secondProperty.equalsIgnoreCase(e)) {
-//                            includesSecondProperty = true;
-//                        }
-//                    }
-//
-//                    if (includesFirstProperty == false) {
-//                        displayPropertyInputErrors(includesFirstProperty, includesSecondProperty, firstProperty, secondProperty);
-//                        continue;
-//                    }
-//                    if (includesSecondProperty == false) {
-//                        displayPropertyInputErrors(includesFirstProperty, includesSecondProperty, firstProperty, secondProperty);
-//                        continue;
-//                    }
-//
-//                    if (detectAndDisplayMutuallyExclusiveProperties(firstProperty, secondProperty) == false) {
-//                        continue;
-//                    }
-//
-//                    int countHasProperty = 0;
-//                    for (int i = 0; i < loopNum; i++) {
-//                        boolean containsFirst = false;
-//                        boolean containsSecond = false;
-//                        String[] arrayToTest = determineProperties(amazingNumber + i).split(", ");
-//                        for (int j = 0; j < arrayToTest.length; j++) {
-//                            if (firstProperty.equalsIgnoreCase(arrayToTest[j])) {
-//                                containsFirst = true;
-//                            }
-//                            if (secondProperty.equalsIgnoreCase(arrayToTest[j])) {
-//                                containsSecond = true;
-//                            }
-//                            if (containsFirst == true && containsSecond == true) {
-//                                countHasProperty++;
-//                                System.out.println((amazingNumber + i) + " is " + determineProperties(amazingNumber + i));
-//                                break;
-//                            }
-//                        }
-//                        if (countHasProperty == loopNum) {
-//                            break;
-//                        }
-//                        if (countHasProperty < loopNum) {
-//                            i--;
-//                            amazingNumber++;
-//                        }
-//                    }
-//                    System.out.println("");
                 }
                 if (loopNum == 0) {
                     System.out.println("\nProperties of " + amazingNumber);
@@ -237,15 +174,6 @@ public class Main {
 
     }
 
-    public static void displayPropertyInputErrors(boolean includesProperty, String firstProperty) {
-        StringBuilder message = new StringBuilder("\nThe property " + " is wrong.\n" +
-                "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SUNNY, SQUARE, JUMPING]\n");
-        if (includesProperty == false) {
-            System.out.println(message.insert(14, firstProperty));
-        }
-    }
-
-    //String[] input, boolean
     public static void displayPropertyInputErrors(String[] input) {
         StringBuilder output = new StringBuilder();
         if (input.length == 1) {
@@ -253,134 +181,32 @@ public class Main {
         } else {
             output.append("The properties " + Arrays.toString(input) + " are wrong.\n");
         }
-        System.out.println(output);
+        System.out.println(output + "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING]");
     }
 
-    public static boolean detectAndDisplayMutuallyExclusiveProperties(String firstProperty, String secondProperty) {
-        StringBuilder message = new StringBuilder("\nThe request contains mutually exclusive properties: " + "[" + firstProperty + ", " + secondProperty + "]\n" +
+    public static boolean detectAndDisplayMutuallyExclusiveProperties(String[] input) {
+        StringBuilder message = new StringBuilder("\nThe request contains mutually exclusive properties: " +
                 "There are no numbers with these properties.\n");
-        if (firstProperty.equalsIgnoreCase("SUNNY") && secondProperty.equalsIgnoreCase("SQUARE") || firstProperty.equalsIgnoreCase("SQUARE")
-                && secondProperty.equalsIgnoreCase("sunny")) {
-            System.out.println(message);
-            return false;
-        }
-        if (firstProperty.equalsIgnoreCase("EVEN") && secondProperty.equalsIgnoreCase("ODD") ||
-        firstProperty.equalsIgnoreCase("ODD") && secondProperty.equalsIgnoreCase("EVEN")) {
-            System.out.println(message);
-            return false;
-        }
-        if (firstProperty.equalsIgnoreCase("DUCK") && secondProperty.equalsIgnoreCase("SPY") ||
-        firstProperty.equalsIgnoreCase("SPY") && secondProperty.equalsIgnoreCase("DUCK")) {
-            System.out.println(message);
-            return false;
-        }
-        return true;
-    }
-
-    public static void calculateProperties(long number, long repeatNum, String[] properties) {
-        //2d for loop. Loop over properties,
-            //IF property switch statement returns true -> increment inner loop variable and call determine properties method
-            //ELSE decrement inner loop variable and increment outer loop variable
-        //PRINT output variable
-
-        int counter = 0;
-        for (int i = (int)number; counter < repeatNum; i++) {
-            for (int j = 0; j < properties.length; j++) {
-                switch (properties[j]) {
-                    case "EVEN":
-                        if (isEven(number)) {
-                            determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "ODD":
-                        if (isOdd(number)) {
-                            determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "BUZZ":
-                        if (isBuzz(number)) {
-                            determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "DUCK":
-                        if (isDuck(number)) {
-                            determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "PALINDROMIC":
-                        if (isPalindrome(number)) {
-                            determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "GAPFUL":
-                        if (isGapFul(number)) {
-                            determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "SPY":
-                        if (isSpy(number)) {
-                        determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "SQUARE":
-                        if (isSquare(number)) {
-                        determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "SUNNY":
-                        if (isSquare(number + 1)) {
-                        determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
-                    case "JUMPING":
-                        if (isJumping(number)) {
-                        determineProperties(i);
-                            counter++;
-                        } else {
-                            j--;
-                            i++;
-                        }
-                        break;
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < input.length; j++){
+                if (input[i].equalsIgnoreCase("SUNNY") && input[j].equalsIgnoreCase("SQUARE") || input[i].equalsIgnoreCase("SQUARE")
+                        && input[j].equalsIgnoreCase("sunny")) {
+                    System.out.println(message.replace(53, 53, "[SQUARE, SUNNY].\n"));
+                    return false;
                 }
-                System.out.println("test");
+                if (input[i].equalsIgnoreCase("EVEN") && input[j].equalsIgnoreCase("ODD") ||
+                        input[i].equalsIgnoreCase("ODD") && input[j].equalsIgnoreCase("EVEN")) {
+                    System.out.println(message.replace(53, 53 ,"[ODD, EVEN].\n"));
+                    return false;
+                }
+                if (input[i].equalsIgnoreCase("DUCK") && input[j].equalsIgnoreCase("SPY") ||
+                        input[i].equalsIgnoreCase("SPY") && input[j].equalsIgnoreCase("DUCK")) {
+                    System.out.println(message.replace(53, 53, "[DUCK, SPY].\n"));
+                    return false;
+                }
             }
         }
+        return true;
     }
 
     public static boolean isSquare(long x) {
@@ -469,6 +295,12 @@ public class Main {
         return jumping;
     }
 }
+
+
+
+
+
+
 
 
 
