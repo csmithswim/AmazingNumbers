@@ -3,6 +3,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+        isHappy(17);
         amazingNumbers();
     }
 
@@ -293,6 +294,40 @@ public class Main {
             }
         }
         return jumping;
+    }
+
+    public static boolean isHappy(long x) {
+        //CONVERT long param to String[]
+        //INITIALIZE sum variable
+            //LOOP through String[]
+                //SQUARE and SUM all elements
+                //STORE expression in sum variable
+            //CHECK if sum <= 10
+                //IF TRUE
+                    //IF sum == 1
+                        //RETURN true
+                    //ELSE return false
+
+
+        String[] inputArray = String.valueOf(x).split("");
+        while (true) {
+            int sum = 0;
+                for (int i = 0; i < inputArray.length; i++) {
+                sum += (Integer.parseInt(inputArray[i]) * Integer.parseInt(inputArray[i]));
+                System.out.println("input array: " + Arrays.toString(inputArray));
+                    System.out.println("array element " + i + " " + inputArray[i]);
+                System.out.println("sum = " + sum);
+            }
+                inputArray = String.valueOf(sum).split("");
+                if (sum == 4) {
+                    break;
+                } else if (sum == 1) {
+                    break;
+                }
+
+
+        }
+        return true;
     }
 }
 
