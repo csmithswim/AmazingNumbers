@@ -3,18 +3,17 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        isHappy(17);
         amazingNumbers();
     }
 
     public static void amazingNumbers() {
         System.out.println("Welcome to Amazing Numbers!\n");
-        System.out.println("Supported requests: \n-enter a natural number to know its properties;");
+        System.out.println("Supported requests: \n- enter a natural number to know its properties;");
         System.out.println("- enter two natural numbers to obtain the properties of the list:\n" +
                 "  * the first parameter represents a starting number;\n" +
-                "  * the second parameters show how many consecutive numbers are to be printed;\n" +
-                " - two natural numbers and a property to search for;\n"+
-                "- two natural numbers and two properties to search for;" +
+                "  * the second parameters shows how many consecutive numbers are to be printed;\n" +
+                "- two natural numbers and a property to search for;\n"+
+                "- a property preceded by minus must not be present in numbers;\n" +
                 "- separate the parameters with one space;\n" +
                 "- enter 0 to exit.\n");
 
@@ -59,14 +58,22 @@ public class Main {
                         userInputProperties[i] = stringInput[i + 2].toUpperCase();
                     }
 
-                    Boolean correctProperty = false;
+                    Boolean       correctProperty     = false;
                     StringBuilder incorrectProperties = new StringBuilder();
-                    String[] availableProperties = new String[] {"DUCK", "EVEN", "ODD", "GAPFUL", "SPY", "PALINDROMIC", "BUZZ", "SQUARE", "SUNNY", "JUMPING"};
+                    String[]      availableProperties = {"DUCK", "EVEN", "ODD", "GAPFUL", "SPY", "PALINDROMIC", "BUZZ", "SQUARE", "SUNNY", "JUMPING", "HAPPY", "SAD"};
+
+                    //count how many times -property appears in array
+                    int excludedProperties = 0;
+
                     for (int i = 0; i < userInputProperties.length; i++) {
-                    correctProperty = false;
+                        correctProperty = false;
                         for (int j = 0; j < availableProperties.length; j++) {
                             if (userInputProperties[i].equalsIgnoreCase(availableProperties[j])) {
                                 correctProperty = true;
+                            } else if (userInputProperties[i].substring(1).equalsIgnoreCase(availableProperties[j])) {
+                                correctProperty = true;
+                                excludedProperties++;
+                                break;
                             }
                         }
                         if (correctProperty == false) {
@@ -75,8 +82,8 @@ public class Main {
                     }
 
                     if (incorrectProperties.length() > 1) {
-                    displayPropertyInputErrors(incorrectProperties.toString().split(" "));
-                    continue;
+                        displayPropertyInputErrors(incorrectProperties.toString().split(" "));
+                        continue;
                     }
                     if (detectAndDisplayMutuallyExclusiveProperties(userInputProperties) == false) {
                         continue;
@@ -86,22 +93,32 @@ public class Main {
 
                     int counter = 0;
                     for (int i = 0; i < loopNum; i++) {
-                        int containsUserProperty = 0;
-
+                        int includeProperty = 0;
+                        int excludedProperty = 0;
                         String[] arrayToTest = determineProperties(amazingNumber + i).split(", ");
                         for (int j = 0; j < propertyLength; j++) {
+
+
                             for (int k = 0; k < arrayToTest.length; k++) {
+
+                                //count how many times an excluded property occurs
+
+                                //count how many times an included property occurs
+                                if (userInputProperties[j].substring(1).equalsIgnoreCase(arrayToTest[k])) {
+                                    excludedProperty++;
+                                    break;
+                                }
                                 if (userInputProperties[j].equalsIgnoreCase(arrayToTest[k])) {
-                                    containsUserProperty++;
+                                    includeProperty++;
                                     break;
                                 }
                             }
+                        }
 
-                            if (containsUserProperty == propertyLength) {
-                                System.out.println((amazingNumber + i) + " is " + determineProperties(amazingNumber + i));
-                                counter++;
-                                continue;
-                            }
+                        if (excludedProperty == 0 && propertyLength == includeProperty + excludedProperties) {
+                            System.out.println((amazingNumber + i) + " is " + determineProperties(amazingNumber + i));
+                            counter++;
+                            continue;
                         }
                         if (counter == loopNum) {
                             break;
@@ -110,10 +127,11 @@ public class Main {
                             i--;
                             amazingNumber++;
                         }
+                    }
                 }
+
                 System.out.println("");
 
-                }
                 if (loopNum == 0) {
                     System.out.println("\nProperties of " + amazingNumber);
                     System.out.println("buzz: " + isBuzz(amazingNumber));
@@ -127,6 +145,8 @@ public class Main {
                     System.out.println("jumping: " + isJumping(amazingNumber));
                     System.out.println("sunny: " + isSquare(amazingNumber +1));
                     System.out.println("jumping: " + isJumping(amazingNumber));
+                    System.out.println("happy: " + isHappy(amazingNumber));
+                    System.out.println("sad: " + !isHappy(amazingNumber));
                 }
 
 
@@ -171,6 +191,12 @@ public class Main {
         if (isJumping(x)) {
             output.append("jumping, ");
         }
+        if (isHappy(x)) {
+            output.append("happy, ");
+        }
+        if (!isHappy(x)) {
+            output.append("sad, ");
+        }
         return output.substring(0, output.length()-2);
 
     }
@@ -182,7 +208,7 @@ public class Main {
         } else {
             output.append("The properties " + Arrays.toString(input) + " are wrong.\n");
         }
-        System.out.println(output + "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING]");
+        System.out.println(output + "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING, HAPPY, SAD]");
     }
 
     public static boolean detectAndDisplayMutuallyExclusiveProperties(String[] input) {
@@ -191,18 +217,33 @@ public class Main {
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input.length; j++){
                 if (input[i].equalsIgnoreCase("SUNNY") && input[j].equalsIgnoreCase("SQUARE") || input[i].equalsIgnoreCase("SQUARE")
-                        && input[j].equalsIgnoreCase("sunny")) {
+                    && input[j].equalsIgnoreCase("sunny")) {
                     System.out.println(message.replace(53, 53, "[SQUARE, SUNNY].\n"));
                     return false;
                 }
                 if (input[i].equalsIgnoreCase("EVEN") && input[j].equalsIgnoreCase("ODD") ||
-                        input[i].equalsIgnoreCase("ODD") && input[j].equalsIgnoreCase("EVEN")) {
+                    input[i].equalsIgnoreCase("ODD") && input[j].equalsIgnoreCase("EVEN") ||
+                        input[i].equalsIgnoreCase("-EVEN") && input[j].equalsIgnoreCase("-ODD") ||
+                        input[i].equalsIgnoreCase("-ODD") && input[j].equalsIgnoreCase("-EVEN")) {
                     System.out.println(message.replace(53, 53 ,"[ODD, EVEN].\n"));
                     return false;
                 }
                 if (input[i].equalsIgnoreCase("DUCK") && input[j].equalsIgnoreCase("SPY") ||
-                        input[i].equalsIgnoreCase("SPY") && input[j].equalsIgnoreCase("DUCK")) {
+                    input[i].equalsIgnoreCase("SPY") && input[j].equalsIgnoreCase("DUCK") ||
+                        input[i].equalsIgnoreCase("-DUCK") && input[j].equalsIgnoreCase("-SPY") ||
+                        input[i].equalsIgnoreCase("-SPY") && input[j].equalsIgnoreCase("-DUCK")) {
                     System.out.println(message.replace(53, 53, "[DUCK, SPY].\n"));
+                    return false;
+                }
+                if (input[i].equalsIgnoreCase("HAPPY") && input[j].equalsIgnoreCase("SAD") ||
+                    input[i].equalsIgnoreCase("SAD") && input[j].equalsIgnoreCase("HAPPY") |
+                     input[i].equalsIgnoreCase("-HAPPY") && input[j].equalsIgnoreCase("-SAD") ||
+                    input[i].equalsIgnoreCase("-SAD") && input[j].equalsIgnoreCase("-HAPPY")) {
+                    System.out.println(message.replace(53, 53, "[HAPPY, SAD].\n"));
+                    return false;
+                }
+                if (input[i].equalsIgnoreCase("-" + input[j])) {
+                    System.out.println(message.replace(53,53, "[" + input[i] + ", " + input[j] + "]\n"));
                     return false;
                 }
             }
@@ -297,37 +338,20 @@ public class Main {
     }
 
     public static boolean isHappy(long x) {
-        //CONVERT long param to String[]
-        //INITIALIZE sum variable
-            //LOOP through String[]
-                //SQUARE and SUM all elements
-                //STORE expression in sum variable
-            //CHECK if sum <= 10
-                //IF TRUE
-                    //IF sum == 1
-                        //RETURN true
-                    //ELSE return false
-
-
         String[] inputArray = String.valueOf(x).split("");
         while (true) {
             int sum = 0;
                 for (int i = 0; i < inputArray.length; i++) {
                 sum += (Integer.parseInt(inputArray[i]) * Integer.parseInt(inputArray[i]));
-                System.out.println("input array: " + Arrays.toString(inputArray));
-                    System.out.println("array element " + i + " " + inputArray[i]);
-                System.out.println("sum = " + sum);
-            }
-                inputArray = String.valueOf(sum).split("");
-                if (sum == 4) {
-                    break;
-                } else if (sum == 1) {
-                    break;
                 }
 
-
+                inputArray = String.valueOf(sum).split("");
+                if (sum == 4) {
+                    return false;
+                } else if (sum == 1) {
+                    return true;
+                }
         }
-        return true;
     }
 }
 
